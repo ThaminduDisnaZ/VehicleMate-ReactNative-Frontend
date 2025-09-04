@@ -20,7 +20,9 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "usesCleartextTraffic": true  ,
+      "edgeToEdgeEnabled": true,
+      "package": "com.anonymous.VehicleMate"
     },
     "web": {
       "favicon": "./assets/favicon.png"
