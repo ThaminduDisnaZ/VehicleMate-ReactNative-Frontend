@@ -1,10 +1,22 @@
 import React, { useState, useCallback } from 'react';
 import { View, Text, SafeAreaView, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation, useFocusEffect, NavigationProp } from '@react-navigation/native'; // Import NavigationProp
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 
-// Vehicle data type (can be shared across files)
+// --- Type Definitions ---
+
+// Define the parameters that each screen in your Stack Navigator can receive
+export type RootStackParamList = {
+    MainTabs: undefined; // No parameters
+    VehicleDetail: { vehicleLocalId: string }; // Expects a vehicleLocalId
+    AddVehicle: undefined;
+    AddFuelLog: { vehicleLocalId: string };
+    AddOtherExpense: { vehicleLocalId: string };
+    Login: undefined;
+};
+
+// Define the Vehicle data type
 type Vehicle = {
     localId: string;
     vehicleId?: number;
@@ -30,10 +42,10 @@ const VehicleItem = ({ name, licensePlate, onPress }: { name: string, licensePla
 
 // --- Main My Vehicles Screen Component ---
 export default function MyVehiclesScreen() {
-    const navigation = useNavigation();
+    // THIS IS THE FIX: Provide the RootStackParamList type to useNavigation
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const [vehicles, setVehicles] = useState<Vehicle[]>([]);
 
-    // Load vehicles from AsyncStorage every time the screen is focused
     useFocusEffect(
         useCallback(() => {
             const loadVehicles = async () => {
@@ -54,7 +66,7 @@ export default function MyVehiclesScreen() {
             <View style={styles.headerContainer}>
                 <Text style={styles.header}>My Vehicles</Text>
                 <TouchableOpacity 
-                    onPress={() => navigation.navigate('AddVehicle' as never)} 
+                    onPress={() => navigation.navigate('AddVehicle')} // No 'as never' needed now
                     style={styles.addButton}
                 >
                     <Ionicons name="add" size={28} color="white" />
@@ -69,8 +81,8 @@ export default function MyVehiclesScreen() {
                         name={item.name}
                         licensePlate={item.licensePlate}
                         onPress={() => {
-                            // Navigate to a detail screen for this vehicle
-                            // navigation.navigate('VehicleDetail', { vehicleLocalId: item.localId });
+                            // THIS IS THE FIX: TypeScript now understands the parameters
+                            navigation.navigate('VehicleDetail', { vehicleLocalId: item.localId });
                         }}
                     />
                 )}
@@ -100,6 +112,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderBottomWidth: 1,
         borderBottomColor: '#E5E7EB',
+        backgroundColor: 'white',
     },
     header: {
         fontSize: 30,
@@ -110,6 +123,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#2563EB',
         padding: 8,
         borderRadius: 50,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
     },
     itemContainer: {
         backgroundColor: 'white',
@@ -146,6 +164,7 @@ const styles = StyleSheet.create({
     emptyContainer: {
         marginTop: 80,
         alignItems: 'center',
+        paddingHorizontal: 20,
     },
     emptyText: {
         fontSize: 18,
@@ -156,5 +175,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#9CA3AF',
         marginTop: 8,
+        textAlign: 'center',
     },
 });
+
