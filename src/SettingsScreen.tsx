@@ -58,8 +58,8 @@ export default function SettingsScreen() {
 
             // 2. Send all local data to the server for syncing
             // IMPORTANT: Replace with your actual IP Address and project name
-            const API_URL = 'http://192.168.8.102:8080/VehicleMate-Backend/syncVehicleData'; 
-            
+            const API_URL = 'http://192.168.8.102:8080/VehicleMate-Backend/syncVehicleData';
+
             const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -72,7 +72,7 @@ export default function SettingsScreen() {
             if (!response.ok) {
                 throw new Error('Sync failed on the server. Please check the server logs.');
             }
-            
+
             // 3. Receive the complete, synced data from the server
             const syncedData = await response.json();
 
@@ -85,7 +85,7 @@ export default function SettingsScreen() {
 
         } catch (e) {
             console.error(e);
-            Alert.alert('Error', 'Could not sync data. Please check your network connection:'+e);
+            Alert.alert('Error', 'Could not sync data. Please check your network connection:' + e);
         } finally {
             setIsSyncing(false);
         }
@@ -97,16 +97,39 @@ export default function SettingsScreen() {
                 <Text style={styles.header}>Settings</Text>
             </View>
             <View style={styles.content}>
-                <SettingsButton 
-                    label={user ? user.username : 'Login'} 
-                    iconName="person-circle-outline" 
-                    onPress={handleLoginLogout} 
+                <SettingsButton
+                    label={user ? user.username : 'Login'}
+                    iconName="person-circle-outline"
+                    onPress={handleLoginLogout}
                 />
-                <SettingsButton 
-                    label="Sync with Cloud" 
-                    iconName="cloud-circle-outline" 
+                <SettingsButton
+                    label="Sync with Cloud"
+                    iconName="cloud-circle-outline"
                     onPress={handleSync}
                     isLoading={isSyncing}
+                />
+                <SettingsButton
+                    label={'Clear Local Data'}
+                    iconName="person-circle-outline"
+                    onPress={async () => {
+                        Alert.alert('Clear Local Data', 'Are you sure you want to clear all local data? This action cannot be undone.', [
+                            { text: 'Cancel', style: 'cancel' },
+                            {
+                                text: 'Clear', onPress: async () => {
+                                    try {
+                                        await AsyncStorage.removeItem('vehicles');
+                                        await AsyncStorage.removeItem('fuel_logs');
+                                        await AsyncStorage.removeItem('other_expenses');
+                                        Alert.alert('Success', 'All local data has been cleared.');
+                                    } catch (e) {
+                                        console.error(e);
+                                        Alert.alert('Error', 'Could not clear local data. Please try again.');
+                                    }
+                                }, style: 'destructive'
+                            },
+                        ]);
+                    }
+                    }
                 />
             </View>
         </SafeAreaView>
