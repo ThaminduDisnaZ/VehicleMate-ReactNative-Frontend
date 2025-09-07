@@ -102,6 +102,7 @@ export default function SettingsScreen() {
                     iconName="person-circle-outline"
                     onPress={handleLoginLogout}
                 />
+                
                 <SettingsButton
                     label="Sync with Cloud"
                     iconName="cloud-circle-outline"
