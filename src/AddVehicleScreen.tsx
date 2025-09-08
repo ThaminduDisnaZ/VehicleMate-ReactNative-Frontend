@@ -1,11 +1,12 @@
-import { View, Text, SafeAreaView, TextInput, TouchableOpacity, StyleSheet, Alert, Platform } from 'react-native';
+import { View, Text,  TextInput, TouchableOpacity, StyleSheet, Alert, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useState } from 'react';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-// Vehicle data type
+
 type Vehicle = {
     localId: string;
     vehicleId?: number;
@@ -15,22 +16,22 @@ type Vehicle = {
     insuranceExpiry: string;
 };
 
-// --- Main Add Vehicle Screen Component ---
+
 export default function AddVehicleScreen() {
     const navigation = useNavigation();
     
-    // Form state
+    
     const [name, setName] = useState('');
     const [licensePlate, setLicensePlate] = useState('');
     const [licenseExpiry, setLicenseExpiry] = useState(new Date());
     const [insuranceExpiry, setInsuranceExpiry] = useState(new Date());
 
-    // Date picker state
+    
     const [pickerVisible, setPickerVisible] = useState<{ type: 'license' | 'insurance' | null, show: boolean }>({ type: null, show: false });
 
     const onDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
         const currentDate = selectedDate || (pickerVisible.type === 'license' ? licenseExpiry : insuranceExpiry);
-        setPickerVisible({ type: null, show: false }); // Hide picker after selection
+        setPickerVisible({ type: null, show: false }); 
 
         if (event.type === "set" && selectedDate) {
             if (pickerVisible.type === 'license') {
@@ -41,20 +42,20 @@ export default function AddVehicleScreen() {
         }
     };
     
-    // Function to format date to "yyyy-MM-dd"
+    
     const formatDate = (date: Date) => {
         return date.toISOString().split('T')[0];
     };
 
     const handleSaveVehicle = async () => {
-        // Validation
+        
         if (!name.trim() || !licensePlate.trim()) {
             Alert.alert('Missing Information', 'Please fill in the vehicle name and license plate.');
             return;
         }
 
         const newVehicle: Vehicle = {
-            localId: Date.now().toString(), // Unique ID for offline use
+            localId: Date.now().toString(), 
             name: name.trim(),
             licensePlate: licensePlate.trim().toUpperCase(),
             licenseExpiry: formatDate(licenseExpiry),
@@ -117,12 +118,12 @@ export default function AddVehicleScreen() {
                 </TouchableOpacity>
             </View>
 
-            {/* Save Button */}
+ 
             <TouchableOpacity style={styles.saveButton} onPress={handleSaveVehicle}>
                 <Text style={styles.saveButtonText}>Save Vehicle</Text>
             </TouchableOpacity>
 
-            {/* The Date Picker Modal (conditionally shown) */}
+
             {pickerVisible.show && (
                 <DateTimePicker
                     value={pickerVisible.type === 'license' ? licenseExpiry : insuranceExpiry}
@@ -135,7 +136,7 @@ export default function AddVehicleScreen() {
     );
 }
 
-// --- StyleSheet for all the styles ---
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

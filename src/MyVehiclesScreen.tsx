@@ -1,22 +1,23 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, SafeAreaView, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
-import { useNavigation, useFocusEffect, NavigationProp } from '@react-navigation/native'; // Import NavigationProp
+import { View, Text,  FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { useNavigation, useFocusEffect, NavigationProp } from '@react-navigation/native'; 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-// --- Type Definitions ---
 
-// Define the parameters that each screen in your Stack Navigator can receive
+
+
 export type RootStackParamList = {
-    MainTabs: undefined; // No parameters
-    VehicleDetail: { vehicleLocalId: string }; // Expects a vehicleLocalId
+    MainTabs: undefined; 
+    VehicleDetail: { vehicleLocalId: string }; 
     AddVehicle: undefined;
     AddFuelLog: { vehicleLocalId: string };
     AddOtherExpense: { vehicleLocalId: string };
     Login: undefined;
 };
 
-// Define the Vehicle data type
+
 type Vehicle = {
     localId: string;
     vehicleId?: number;
@@ -26,7 +27,7 @@ type Vehicle = {
     insuranceExpiry: string;
 };
 
-// --- Reusable Component for a single vehicle item ---
+
 const VehicleItem = ({ name, licensePlate, onPress }: { name: string, licensePlate: string, onPress: () => void }) => (
     <TouchableOpacity onPress={onPress} style={styles.itemContainer}>
         <View style={styles.itemIconContainer}>
@@ -40,9 +41,9 @@ const VehicleItem = ({ name, licensePlate, onPress }: { name: string, licensePla
     </TouchableOpacity>
 );
 
-// --- Main My Vehicles Screen Component ---
+
 export default function MyVehiclesScreen() {
-    // THIS IS THE FIX: Provide the RootStackParamList type to useNavigation
+    
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const [vehicles, setVehicles] = useState<Vehicle[]>([]);
 
@@ -62,18 +63,18 @@ export default function MyVehiclesScreen() {
 
     return (
         <SafeAreaView style={styles.container}>
-            {/* Header */}
+ 
             <View style={styles.headerContainer}>
                 <Text style={styles.header}>My Vehicles</Text>
                 <TouchableOpacity 
-                    onPress={() => navigation.navigate('AddVehicle')} // No 'as never' needed now
+                    onPress={() => navigation.navigate('AddVehicle')} 
                     style={styles.addButton}
                 >
                     <Ionicons name="add" size={28} color="white" />
                 </TouchableOpacity>
             </View>
 
-            {/* List of Vehicles */}
+     
             <FlatList
                 data={vehicles}
                 renderItem={({ item }) => (
@@ -81,7 +82,7 @@ export default function MyVehiclesScreen() {
                         name={item.name}
                         licensePlate={item.licensePlate}
                         onPress={() => {
-                            // THIS IS THE FIX: TypeScript now understands the parameters
+                            
                             navigation.navigate('VehicleDetail', { vehicleLocalId: item.localId });
                         }}
                     />
@@ -99,7 +100,7 @@ export default function MyVehiclesScreen() {
     );
 }
 
-// --- StyleSheet for all the styles ---
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

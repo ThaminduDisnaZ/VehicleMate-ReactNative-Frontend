@@ -2,7 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 
-// CORRECTED: Import the screens from the correct relative paths
+
 import MyVehiclesScreen from './MyVehiclesScreen';
 import SettingsScreen from './SettingsScreen';
 import DashboardScreen from './DashboardScreen';

@@ -1,12 +1,13 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text,  ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation, useFocusEffect, NavigationProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-// --- Type Definitions ---
 
-// This type definition helps TypeScript understand your navigation structure
+
+
 export type RootStackParamList = {
     MainTabs: undefined;
     VehicleDetail: { vehicleLocalId: string };
@@ -16,31 +17,31 @@ export type RootStackParamList = {
     Login: undefined;
 };
 
-// Define the data types for the app
+
 type Vehicle = {
     localId: string;
     vehicleId?: number;
     name: string;
     licensePlate: string;
-    licenseExpiry: string; // Stored as "yyyy-MM-dd"
-    insuranceExpiry: string; // Stored as "yyyy-MM-dd"
+    licenseExpiry: string; 
+    insuranceExpiry: string; 
 };
 
 type FuelLog = {
     localId: string;
     logId?: number;
-    date: string; // Stored as "yyyy-MM-dd"
+    date: string; 
     cost: number;
     vehicleLocalId: string;
 };
 
-// --- Main Dashboard Screen Component ---
+
 export default function DashboardScreen() {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const [vehicles, setVehicles] = useState<Vehicle[]>([]);
     const [fuelLogs, setFuelLogs] = useState<FuelLog[]>([]);
 
-    // Load all necessary data from AsyncStorage whenever the screen comes into focus
+    
     useFocusEffect(
         useCallback(() => {
             const loadData = async () => {
@@ -58,21 +59,21 @@ export default function DashboardScreen() {
         }, [])
     );
 
-    // useMemo ensures these calculations only run when vehicles or fuelLogs change
+    
     const { upcomingReminders, totalFuelCostThisMonth } = useMemo(() => {
         const reminders: { message: string, daysLeft: number }[] = [];
         const today = new Date();
-        today.setHours(0, 0, 0, 0); // Normalize to the start of the day for accurate comparison
+        today.setHours(0, 0, 0, 0); 
 
         vehicles.forEach(v => {
-            // Check license expiry date
+            
             const licenseDate = new Date(v.licenseExpiry);
             const licenseDiff = Math.ceil((licenseDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
             if (licenseDiff <= 30 && licenseDiff >= 0) {
                 reminders.push({ message: `${v.name} - License expires`, daysLeft: licenseDiff });
             }
 
-            // Check insurance expiry date
+            
             const insuranceDate = new Date(v.insuranceExpiry);
             const insuranceDiff = Math.ceil((insuranceDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
             if (insuranceDiff <= 30 && insuranceDiff >= 0) {
@@ -80,10 +81,10 @@ export default function DashboardScreen() {
             }
         });
         
-        // Sort reminders to show the most urgent ones first
+        
         reminders.sort((a, b) => a.daysLeft - b.daysLeft);
 
-        // Calculate total fuel cost for the current calendar month
+        
         const currentMonth = today.getMonth();
         const currentYear = today.getFullYear();
         const totalFuel = fuelLogs
@@ -101,7 +102,7 @@ export default function DashboardScreen() {
             <ScrollView contentContainerStyle={styles.scrollContent}>
                 <Text style={styles.header}>Dashboard</Text>
 
-                {/* Reminders Section */}
+                {}
                 <View style={styles.card}>
                     <Text style={styles.cardTitle}>Upcoming Reminders</Text>
                     {upcomingReminders.length > 0 ? (
@@ -119,7 +120,7 @@ export default function DashboardScreen() {
                     )}
                 </View>
 
-                {/* Fuel Summary Section */}
+                {}
                 <View style={styles.card}>
                      <Text style={styles.cardTitle}>Fuel Summary</Text>
                      <Text style={styles.summaryLabel}>Total spent this month</Text>
@@ -128,17 +129,17 @@ export default function DashboardScreen() {
                      </Text>
                 </View>
 
-                {/* Action Buttons */}
+                {}
                 <View style={styles.actionsContainer}>
                      <TouchableOpacity 
-                        onPress={() => navigation.navigate('AddFuelLog', { vehicleLocalId: '' })} // Navigates to the fuel log screen
+                        onPress={() => navigation.navigate('AddFuelLog', { vehicleLocalId: '' })} 
                         style={[styles.actionButton, styles.fuelButton]}
                      >
                         <Ionicons name="water" size={24} color="white" />
                         <Text style={styles.actionButtonText}>Log Fuel</Text>
                      </TouchableOpacity>
                      <TouchableOpacity 
-                        onPress={() => navigation.navigate('MainTabs', { screen: 'My Vehicles' }as never)} // Navigates to the My Vehicles tab
+                        onPress={() => navigation.navigate('MainTabs', { screen: 'My Vehicles' }as never)} 
                         style={[styles.actionButton, styles.vehiclesButton]}
                     >
                         <Ionicons name="car-sport" size={24} color="white" />
@@ -151,7 +152,7 @@ export default function DashboardScreen() {
     );
 }
 
-// --- StyleSheet for all the styles ---
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

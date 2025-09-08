@@ -1,13 +1,13 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Define the shape of the User object, matching the Java backend
+
 type User = {
   userId: number;
   username: string;
 };
 
-// Define the shape of the context value
+
 type AuthContextType = {
   user: User | null;
   login: (userData: User) => Promise<void>;
@@ -15,15 +15,15 @@ type AuthContextType = {
   isLoading: boolean;
 };
 
-// Create the context
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Create the Provider component
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check async storage for a saved user session when the app starts
+  
   useEffect(() => {
     const loadUserFromStorage = async () => {
       try {
@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// Create a custom hook to easily use the auth context in any component
+
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

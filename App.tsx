@@ -6,7 +6,7 @@ import AddVehicleScreen from './src/AddVehicleScreen';
 import AddFuelLogScreen from './src/AddFuelLogScreen';
 import AddOtherExpenseScreen from './src/AddOtherExpenseScreen';
 import VehicleDetailScreen from './src/VehicleDetailScreen';
-import LoginScreen from './src/LoginScreen'; // Ensure LoginScreen is imported
+import LoginScreen from './src/LoginScreen'; 
 import { AuthProvider } from './src/AuthContext';
 
 const Stack = createStackNavigator();
@@ -16,20 +16,19 @@ export default function App() {
     <AuthProvider>
       <NavigationContainer>
         <Stack.Navigator>
-          {/* Group for main screens with tabs */}
+
           <Stack.Screen 
             name="MainTabs" 
             component={MainTabNavigator} 
             options={{ headerShown: false }} 
           />
-          {/* Group for regular screens that slide from the side */}
+
           <Stack.Screen 
             name="VehicleDetail" 
             component={VehicleDetailScreen}
             options={{ headerShown: false }} 
           />
-          
-          {/* Group for screens that appear on top as modals */}
+
           <Stack.Group screenOptions={{ presentation: 'modal', headerShown: false }}>
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="AddVehicle" component={AddVehicleScreen}/>

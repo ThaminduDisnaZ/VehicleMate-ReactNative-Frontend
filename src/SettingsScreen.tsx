@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from 'react-native';
+import { View, Text,  TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from './AuthContext';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-// --- Reusable Button Component ---
+
 const SettingsButton = ({ label, iconName, onPress, isLoading = false }: { label: string; iconName: keyof typeof Ionicons.glyphMap; onPress: () => void; isLoading?: boolean; }) => (
     <TouchableOpacity onPress={onPress} disabled={isLoading} style={styles.button}>
         <Ionicons name={iconName} size={24} color="#4B5563" />
@@ -16,7 +17,7 @@ const SettingsButton = ({ label, iconName, onPress, isLoading = false }: { label
     </TouchableOpacity>
 );
 
-// --- Main Settings Screen ---
+
 export default function SettingsScreen() {
     const navigation = useNavigation();
     const { user, logout } = useAuth();
@@ -29,7 +30,7 @@ export default function SettingsScreen() {
                 { text: 'Logout', onPress: logout, style: 'destructive' },
             ]);
         } else {
-            // Use getParent() to navigate to the Login screen in the parent StackNavigator
+            
             navigation.getParent()?.navigate('Login' as never);
         }
     };
@@ -45,7 +46,7 @@ export default function SettingsScreen() {
 
         setIsSyncing(true);
         try {
-            // 1. Get all local data from AsyncStorage
+            
             const vehiclesJSON = await AsyncStorage.getItem('vehicles');
             const fuelLogsJSON = await AsyncStorage.getItem('fuel_logs');
             const otherExpensesJSON = await AsyncStorage.getItem('other_expenses');
@@ -56,8 +57,8 @@ export default function SettingsScreen() {
                 otherExpenses: otherExpensesJSON ? JSON.parse(otherExpensesJSON) : [],
             };
 
-            // 2. Send all local data to the server for syncing
-            // IMPORTANT: Replace with your actual IP Address and project name
+            
+            
             const API_URL = 'http://192.168.8.102:8080/VehicleMate-Backend/syncVehicleData';
 
             const response = await fetch(API_URL, {
@@ -73,10 +74,10 @@ export default function SettingsScreen() {
                 throw new Error('Sync failed on the server. Please check the server logs.');
             }
 
-            // 3. Receive the complete, synced data from the server
+            
             const syncedData = await response.json();
 
-            // 4. Replace local data with the complete data from the server
+            
             await AsyncStorage.setItem('vehicles', JSON.stringify(syncedData.vehicles || []));
             await AsyncStorage.setItem('fuel_logs', JSON.stringify(syncedData.fuelLogs || []));
             await AsyncStorage.setItem('other_expenses', JSON.stringify(syncedData.otherExpenses || []));

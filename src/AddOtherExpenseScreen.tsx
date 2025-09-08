@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, TextInput, TouchableOpacity, StyleSheet, Alert, Platform, ScrollView } from 'react-native';
+import { View, Text,  TextInput, TouchableOpacity, StyleSheet, Alert, Platform, ScrollView } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-// Other Expense data type
+
 type OtherExpense = {
     localId: string;
     expenseId?: number;
@@ -13,23 +14,23 @@ type OtherExpense = {
     description: string;
     category: string;
     cost: number;
-    vehicleLocalId: string; // To link it to a vehicle
+    vehicleLocalId: string; 
 };
 
-// --- Main Add Other Expense Screen Component ---
+
 export default function AddOtherExpenseScreen() {
     const navigation = useNavigation();
     const route = useRoute();
-    // Get the vehicle's ID passed from the previous screen
+    
     const { vehicleLocalId } = route.params as { vehicleLocalId: string }; 
 
-    // Form state
+    
     const [description, setDescription] = useState('');
     const [category, setCategory] = useState('');
     const [cost, setCost] = useState('');
     const [date, setDate] = useState(new Date());
 
-    // Date picker state
+    
     const [isPickerVisible, setIsPickerVisible] = useState(false);
 
     const onDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
@@ -40,7 +41,7 @@ export default function AddOtherExpenseScreen() {
     };
 
     const handleSaveExpense = async () => {
-        // Validation
+        
         const costValue = parseFloat(cost);
 
         if (!description.trim()) {
@@ -55,7 +56,7 @@ export default function AddOtherExpenseScreen() {
         const newExpense: OtherExpense = {
             localId: Date.now().toString(),
             description: description.trim(),
-            category: category.trim() || 'General', // Default category if empty
+            category: category.trim() || 'General', 
             cost: costValue,
             date: date.toISOString().split('T')[0],
             vehicleLocalId: vehicleLocalId, 
@@ -185,7 +186,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     saveButton: {
-        backgroundColor: '#3B82F6', // Changed color to blue
+        backgroundColor: '#3B82F6', 
         padding: 16,
         borderRadius: 8,
         alignItems: 'center',

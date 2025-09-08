@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, TextInput, TouchableOpacity, StyleSheet, Alert, Platform, ScrollView } from 'react-native';
+import { View, Text,  TextInput, TouchableOpacity, StyleSheet, Alert, Platform, ScrollView,  } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-// Fuel Log data type
+
 type FuelLog = {
     localId: string;
     logId?: number;
@@ -13,23 +14,23 @@ type FuelLog = {
     odometer: number;
     liters: number;
     cost: number;
-    vehicleLocalId: string; // To link it to a vehicle
+    vehicleLocalId: string; 
 };
 
-// --- Main Add Fuel Log Screen Component ---
+
 export default function AddFuelLogScreen() {
     const navigation = useNavigation();
     const route = useRoute();
-    // Get the vehicle's ID passed from the previous screen (VehicleDetailScreen)
+    
     const { vehicleLocalId } = route.params as { vehicleLocalId: string }; 
 
-    // Form state
+    
     const [odometer, setOdometer] = useState('');
     const [liters, setLiters] = useState('');
     const [cost, setCost] = useState('');
     const [date, setDate] = useState(new Date());
 
-    // Date picker state
+    
     const [isPickerVisible, setIsPickerVisible] = useState(false);
 
     const onDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
@@ -40,7 +41,7 @@ export default function AddFuelLogScreen() {
     };
 
     const handleSaveLog = async () => {
-        // Validation
+        
         const odoValue = parseFloat(odometer);
         const litersValue = parseFloat(liters);
         const costValue = parseFloat(cost);
@@ -56,7 +57,7 @@ export default function AddFuelLogScreen() {
             liters: litersValue,
             cost: costValue,
             date: date.toISOString().split('T')[0],
-            vehicleLocalId: vehicleLocalId, // Use the actual vehicle ID
+            vehicleLocalId: vehicleLocalId, 
         };
 
         try {
@@ -136,7 +137,7 @@ export default function AddFuelLogScreen() {
 }
 
 const styles = StyleSheet.create({
-    // ... styles remain the same
+
     container: { flex: 1, backgroundColor: '#F3F4F6' },
     headerContainer: { padding: 16, flexDirection: 'row', alignItems: 'center', backgroundColor: 'white' },
     header: { fontSize: 22, fontWeight: 'bold', color: '#1F2937', marginLeft: 16 },

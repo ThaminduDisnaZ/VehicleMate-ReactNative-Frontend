@@ -1,13 +1,13 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
-// Import RouteProp and NavigationProp to correctly type the navigation objects
+import { View, Text,  ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation, useRoute, useFocusEffect, NavigationProp, RouteProp } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-// --- Type Definitions ---
-// This RootStackParamList should be defined in a central types file (e.g., navigation.ts)
-// and imported into every screen that uses navigation to ensure consistency.
+
+
+
 export type RootStackParamList = {
     MainTabs: undefined;
     VehicleDetail: { vehicleLocalId: string };
@@ -17,15 +17,15 @@ export type RootStackParamList = {
     Login: undefined;
 };
 
-// Define the specific type for this screen's route prop
+
 type VehicleDetailScreenRouteProp = RouteProp<RootStackParamList, 'VehicleDetail'>;
 
-// Define the data models for the app
+
 type Vehicle = { localId: string; name: string; licensePlate: string; };
 type FuelLog = { localId: string; date: string; cost: number; odometer: number; vehicleLocalId: string; };
 type OtherExpense = { localId: string; date: string; description: string; cost: number; vehicleLocalId: string; };
 
-// --- Reusable Component for list items ---
+
 const LogItem = ({ title, subtitle, amount }: { title: string, subtitle: string, amount: number }) => (
     <View style={styles.logItem}>
         <View style={styles.logItemTextContainer}>
@@ -36,35 +36,35 @@ const LogItem = ({ title, subtitle, amount }: { title: string, subtitle: string,
     </View>
 );
 
-// --- Main Vehicle Detail Screen Component ---
+
 export default function VehicleDetailScreen() {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const route = useRoute<VehicleDetailScreenRouteProp>();
-    
-    // Safely access the parameter after ensuring it's typed correctly
+
+
     const { vehicleLocalId } = route.params;
 
     const [vehicle, setVehicle] = useState<Vehicle | null>(null);
     const [fuelLogs, setFuelLogs] = useState<FuelLog[]>([]);
     const [otherExpenses, setOtherExpenses] = useState<OtherExpense[]>([]);
 
-    // Load all data related to this specific vehicle when the screen is focused
+
     useFocusEffect(
         useCallback(() => {
             const loadVehicleData = async () => {
                 try {
-                    // 1. Find the specific vehicle from the list of all vehicles
+
                     const vehiclesJSON = await AsyncStorage.getItem('vehicles');
                     const allVehicles: Vehicle[] = vehiclesJSON ? JSON.parse(vehiclesJSON) : [];
                     const currentVehicle = allVehicles.find(v => v.localId === vehicleLocalId);
                     setVehicle(currentVehicle || null);
 
-                    // 2. Filter fuel logs just for this vehicle
+
                     const fuelLogsJSON = await AsyncStorage.getItem('fuel_logs');
                     const allFuelLogs: FuelLog[] = fuelLogsJSON ? JSON.parse(fuelLogsJSON) : [];
                     setFuelLogs(allFuelLogs.filter(log => log.vehicleLocalId === vehicleLocalId).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
 
-                    // 3. Filter other expenses just for this vehicle
+
                     const otherExpensesJSON = await AsyncStorage.getItem('other_expenses');
                     const allOtherExpenses: OtherExpense[] = otherExpensesJSON ? JSON.parse(otherExpensesJSON) : [];
                     setOtherExpenses(allOtherExpenses.filter(exp => exp.vehicleLocalId === vehicleLocalId).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
@@ -75,7 +75,7 @@ export default function VehicleDetailScreen() {
         }, [vehicleLocalId])
     );
 
-    // Display a loading state until the vehicle data is fetched
+
     if (!vehicle) {
         return (
             <SafeAreaView style={styles.container}>
@@ -100,18 +100,18 @@ export default function VehicleDetailScreen() {
                     <Text style={styles.subHeader}>{vehicle.licensePlate}</Text>
                 </View>
             </View>
-            
+
             <ScrollView contentContainerStyle={styles.scrollContent}>
-                {/* Action buttons */}
+                { }
                 <View style={styles.actionsContainer}>
-                     <TouchableOpacity 
-                        onPress={() => navigation.navigate('AddFuelLog', { vehicleLocalId })} 
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('AddFuelLog', { vehicleLocalId })}
                         style={[styles.actionButton, styles.fuelButton]}
-                     >
+                    >
                         <Ionicons name="water" size={20} color="white" />
                         <Text style={styles.actionButtonText}>Add Fuel</Text>
-                     </TouchableOpacity>
-                     <TouchableOpacity 
+                    </TouchableOpacity>
+                    <TouchableOpacity
                         onPress={() => navigation.navigate('AddOtherExpense', { vehicleLocalId })}
                         style={[styles.actionButton, styles.expenseButton]}
                     >
@@ -120,7 +120,7 @@ export default function VehicleDetailScreen() {
                     </TouchableOpacity>
                 </View>
 
-                {/* Fuel Logs Section */}
+                { }
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Fuel Logs</Text>
                     {fuelLogs.length > 0 ? (
@@ -130,10 +130,10 @@ export default function VehicleDetailScreen() {
                     ) : <Text style={styles.noItemsText}>No fuel logs recorded.</Text>}
                 </View>
 
-                {/* Other Expenses Section */}
+                { }
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Other Expenses</Text>
-                     {otherExpenses.length > 0 ? (
+                    {otherExpenses.length > 0 ? (
                         otherExpenses.map(exp => (
                             <LogItem key={exp.localId} title={exp.description} subtitle={exp.date} amount={exp.cost} />
                         ))

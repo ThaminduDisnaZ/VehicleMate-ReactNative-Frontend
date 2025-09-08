@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, Platform } from 'react-native';
+import { View, Text,  TextInput, TouchableOpacity, StyleSheet, Alert, ActivityIndicator, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from './AuthContext';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-// --- Main Login Screen Component ---
+
 export default function LoginScreen() {
     const navigation = useNavigation();
-    const { login } = useAuth(); // Get the login function from our AuthContext
+    const { login } = useAuth(); 
     
-    // Form state
+    
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
     const handleLoginOrRegister = async () => {
-        // Validation
+        
         if (!username.trim() || !password.trim()) {
             Alert.alert('Missing Information', 'Please enter a username and password.');
             return;
@@ -23,7 +24,7 @@ export default function LoginScreen() {
 
         setIsLoading(true);
         try {
-            // IMPORTANT: Replace with your actual IP and endpoint
+            
             const API_URL = 'http://192.168.8.102:8080/VehicleMate-Backend//login'; 
 
             const response = await fetch(API_URL, {
@@ -34,12 +35,12 @@ export default function LoginScreen() {
 
             if (response.ok) {
                 const userData = await response.json();
-                // Call the global login function from AuthContext
+                
                 login(userData); 
                 Alert.alert('Success', `Welcome, ${userData.username}!`);
-                navigation.goBack(); // Close the modal login screen
+                navigation.goBack(); 
             } else {
-                // Handle specific errors like "Wrong password" from the server
+                
                 const errorData = await response.json();
                 Alert.alert('Login Failed', errorData.error || 'Invalid username or password.');
             }
@@ -54,7 +55,7 @@ export default function LoginScreen() {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.modalView}>
-                {/* Close Button */}
+                {}
                 <TouchableOpacity onPress={() => navigation.goBack()} style={styles.closeButton}>
                     <Ionicons name="close-circle" size={32} color="#9CA3AF" />
                 </TouchableOpacity>
@@ -77,10 +78,10 @@ export default function LoginScreen() {
                     placeholder="Enter a password"
                     value={password}
                     onChangeText={setPassword}
-                    secureTextEntry // Hides the password
+                    secureTextEntry 
                 />
 
-                {/* Login Button */}
+                {}
                 <TouchableOpacity 
                     style={styles.loginButton} 
                     onPress={handleLoginOrRegister} 
@@ -97,12 +98,12 @@ export default function LoginScreen() {
     );
 }
 
-// --- StyleSheet for all the styles ---
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        backgroundColor: 'rgba(0,0,0,0.5)', // Dimmed background
+        backgroundColor: 'rgba(0,0,0,0.5)', 
     },
     modalView: {
         margin: 20,
