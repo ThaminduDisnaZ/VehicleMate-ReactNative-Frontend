@@ -62,11 +62,11 @@ Follow these instructions to get a copy of the project up and running on your lo
 
 ## Screenshots
 
-| Login Screen | Dashboard | My Vehicles |
+| Dashboard | My Vehicles | Settings |
 | :----------: | :-------: | :---------: |
 |  ![Login Screen](https://github.com/ThaminduDisnaZ/VehicleMate-ReactNative-Frontend/raw/master/Screenshot%202025-09-09%20210016.png)     |  ![Dashboard](https://github.com/ThaminduDisnaZ/VehicleMate-ReactNative-Frontend/raw/master/Screenshot%202025-09-09%20210213.png)  |   ![My Vehicles](https://github.com/ThaminduDisnaZ/VehicleMate-ReactNative-Frontend/raw/master/Screenshot%202025-09-09%20210250.png)   |
 
-| Vehicle Details | Add Fuel Log |
+| Add Vehicles | Vehicle Details |
 | :-------------: | :----------: |
 | ![Vehicle Details](https://github.com/ThaminduDisnaZ/VehicleMate-ReactNative-Frontend/raw/master/Screenshot%202025-09-09%20210308.png) | ![Add Fuel Log](https://github.com/ThaminduDisnaZ/VehicleMate-ReactNative-Frontend/raw/master/Screenshot%202025-09-09%20210434.png) |
 
