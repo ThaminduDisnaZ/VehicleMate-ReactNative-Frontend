@@ -18,6 +18,9 @@ const SettingsButton = ({ label, iconName, onPress, isLoading = false }: { label
 );
 
 
+
+
+
 export default function SettingsScreen() {
     const navigation = useNavigation();
     const { user, logout } = useAuth();
